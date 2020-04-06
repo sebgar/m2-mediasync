@@ -4,6 +4,12 @@
         <dev>
             <sga_mediasync>
                 <enabled>0</enabled>
+                <patterns>
+                    <p1><![CDATA[#src\s*=\s*["|']?([a-zA-Z0-9_./:-]+/media/[a-zA-Z0-9_./ -]+)["|']?#]]></p1>
+                    <p2><![CDATA[#url\s*\(["|']?([a-zA-Z0-9_./:-]+/media/[a-zA-Z0-9_./ -]+)["|']?\)#]]></p2>
+                    <p3><![CDATA[#data-original\s*=\s*["|']?([a-zA-Z0-9_./:-]+/media/[a-zA-Z0-9_./ -]+)["|']?#]]></p3>
+                    <p4><![CDATA[#data-thumb\s*=\s*["|']?([a-zA-Z0-9_./:-]+/media/[a-zA-Z0-9_./ -]+)["|']?#]]></p4>
+                </patterns>
             </sga_mediasync>
         </dev>
     </default>

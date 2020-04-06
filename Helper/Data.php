@@ -5,19 +5,13 @@ use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Sga\MediaSync\Helper\Config;
 
 class Data extends AbstractHelper
 {
     protected $_patternMediaFolder = 'media';
-    protected $_regExps = array(
-        '#src\s*=\s*["|\']?([a-zA-Z0-9_./:-]+/media/[a-zA-Z0-9_./ -]+)["|\']?#',
-        "#url\s*\([\"|']?([a-zA-Z0-9_./:-]+/media/[a-zA-Z0-9_./ -]+)[\"|']?\)#",
-        '#data-original\s*=\s*["|\']?([a-zA-Z0-9_./:-]+/media/[a-zA-Z0-9_./ -]+)["|\']?#',
-        '#data-thumb\s*=\s*["|\']?([a-zA-Z0-9_./:-]+/media/[a-zA-Z0-9_./ -]+)["|\']?#'
-    );
-
     protected $_config;
     protected $_request;
     protected $_directorylist;
@@ -28,22 +22,37 @@ class Data extends AbstractHelper
         Config $config,
         RequestInterface $request,
         DirectoryList $directorylist,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->_config = $config;
         $this->_request = $request;
         $this->_directorylist = $directorylist;
         $this->_storeManager = $storeManager;
+        $this->_scopeConfig = $scopeConfig;
 
         parent::__construct($context);
+    }
+
+    protected function _getPatterns()
+    {
+        $list = [];
+        $nodes = $this->_scopeConfig->get('system', 'default/dev/sga_mediasync/patterns');
+        if (is_array($nodes)) {
+            foreach ($nodes as $key => $node) {
+                $list[] = $node;
+            }
+        }
+        return $list;
     }
 
     public function syncMediaByHtml($html)
     {
         if ($this->_config->isEnabled()) {
-            foreach ($this->_regExps as $regExp) {
+            $patterns = $this->_getPatterns();
+            foreach ($patterns as $pattern) {
                 $matches = array();
-                if (preg_match_all($regExp, $html, $matches)) {
+                if (preg_match_all($pattern, $html, $matches)) {
                     foreach ($matches[1] as $match) {
                         $this->syncFile($match);
                     }
