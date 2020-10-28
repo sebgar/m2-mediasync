@@ -3,4 +3,7 @@
     <type name="Magento\Catalog\Helper\Image">
         <plugin name="sga_mediasync_plugin_image" type="Sga\MediaSync\Plugin\ImageHelper"/>
     </type>
+    <type name="Magento\Catalog\Model\View\Asset\Image">
+        <plugin name="sga_mediasync_plugin_image" type="Sga\MediaSync\Plugin\ViewAssetImage"/>
+    </type>
 </config>

@@ -14,8 +14,9 @@ class Data extends AbstractHelper
     protected $_patternMediaFolder = 'media';
     protected $_config;
     protected $_request;
-    protected $_directorylist;
+    protected $_directoryList;
     protected $_storeManager;
+    protected $_scopeConfig;
 
     public function __construct(
         Context $context,
@@ -27,7 +28,7 @@ class Data extends AbstractHelper
     ) {
         $this->_config = $config;
         $this->_request = $request;
-        $this->_directorylist = $directorylist;
+        $this->_directoryList = $directorylist;
         $this->_storeManager = $storeManager;
         $this->_scopeConfig = $scopeConfig;
 
@@ -64,7 +65,7 @@ class Data extends AbstractHelper
     public function getMediaUrl($url)
     {
         if ($this->_config->isEnabled()) {
-            $path = $this->_directorylist->getPath('media') . DIRECTORY_SEPARATOR . $url;
+            $path = $this->_directoryList->getPath('media') . DIRECTORY_SEPARATOR . $url;
             $this->syncFile($path);
 
             return $this->_storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . $url;
@@ -74,11 +75,11 @@ class Data extends AbstractHelper
     public function syncFile($path)
     {
         $savedPath = $path;
-        if ($this->_config->isEnabled()) {
+        if ($this->_config->isEnabled() && !preg_match('#/cache/#', $path)) {
             if (preg_match('#^http#', $path)) {
                 $partsPath = explode('/'.$this->_patternMediaFolder.'/', $path);
                 array_shift($partsPath);
-                $path = $this->_directorylist->getPath('media').DIRECTORY_SEPARATOR.implode('/'.$this->_patternMediaFolder.'/', $partsPath);
+                $path = $this->_directoryList->getPath('media').DIRECTORY_SEPARATOR.implode('/'.$this->_patternMediaFolder.'/', $partsPath);
             }
 
             if (!file_exists($path)) {
@@ -87,6 +88,12 @@ class Data extends AbstractHelper
                     $curl = curl_init();
                     curl_setopt($curl, CURLOPT_URL, $url);
                     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+
+                    $username = (string)$this->_config->getHtaccessUser();
+                    $password = (string)$this->_config->getHtaccessPassword();
+                    if ($username !== '' && $password !== '') {
+                        curl_setopt($curl, CURLOPT_USERPWD, $username . ":" . $password);
+                    }
                     $data = curl_exec($curl);
 
                     if (curl_getinfo($curl, CURLINFO_HTTP_CODE) == 200) {
