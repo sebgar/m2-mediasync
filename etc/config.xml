@@ -12,6 +12,7 @@
                     <p5><![CDATA[#srcset\s*=\s*["|']?([a-zA-Z0-9_./:-]+/media/[a-zA-Z0-9_./ -]+)["|']?#]]></p5>
                 </patterns>
                 <htaccess_password backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <useragent><![CDATA[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36]]></useragent>
             </sga_mediasync>
         </dev>
     </default>
