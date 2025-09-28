@@ -11,6 +11,7 @@ class Config extends AbstractHelper
     const XML_PATH_SOURCE_URL = 'dev/sga_mediasync/source_url';
     const XML_PATH_HTACCESS_USER = 'dev/sga_mediasync/htaccess_user';
     const XML_PATH_HTACCESS_PASSWORD = 'dev/sga_mediasync/htaccess_password';
+    const XML_PATH_USERAGENT = 'dev/sga_mediasync/useragent';
 
     public function isEnabled($store = null)
     {
@@ -43,6 +44,15 @@ class Config extends AbstractHelper
     {
         return (string)$this->scopeConfig->getValue(
             self::XML_PATH_HTACCESS_PASSWORD,
+            ScopeInterface::SCOPE_STORE,
+            $store
+        );
+    }
+
+    public function getUserAgent($store = null)
+    {
+        return (string)$this->scopeConfig->getValue(
+            self::XML_PATH_USERAGENT,
             ScopeInterface::SCOPE_STORE,
             $store
         );

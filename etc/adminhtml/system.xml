@@ -18,6 +18,9 @@
                     <label>Htaccess Password</label>
                     <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
                 </field>
+                <field id="useragent" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>User Agent</label>
+                </field>
             </group>
         </section>
     </system>

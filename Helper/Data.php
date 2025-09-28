@@ -91,8 +91,12 @@ class Data extends AbstractHelper
 
                     $username = (string)$this->_config->getHtaccessUser();
                     $password = (string)$this->_config->getHtaccessPassword();
+                    $useragent = (string)$this->_config->getUserAgent();
                     if ($username !== '' && $password !== '') {
                         curl_setopt($curl, CURLOPT_USERPWD, $username . ":" . $password);
+                    }
+                    if ($useragent !== '') {
+                        curl_setopt($curl, CURLOPT_USERAGENT, $useragent);
                     }
                     $data = curl_exec($curl);
 
